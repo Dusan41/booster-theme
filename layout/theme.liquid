@@ -1,0 +1,258 @@
+<!doctype html>
+<!--[if IE 9]> <html class="ie9 no-js" lang="{{ shop.locale }}"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{ shop.locale }}"> <!--<![endif]-->
+<head>
+{%- capture default_template_description %}{{ page_description }}{% endcapture -%}
+{%- capture default_template_title %}{{ page_title }}{% if current_tags %}{% capture meta_tags %}{% assign current_tags_str = current_tags | join: ', ' | append: ',' %}{% assign tag_translation_namespace = 'ta' | append: language %}{% for tag_translation in shop.metafields[tag_translation_namespace] %}{% assign srcToReplace = tag_translation | first %}{% assign srcToCheckFor = tag_translation | first | append: ',' %}{% assign translated = tag_translation | last %}{% if current_tags_str contains srcToCheckFor %}{% assign current_tags_str = current_tags_str | replace: srcToReplace, translated %}{% endif %}{% endfor %}{{ current_tags_str | append: '$#' | replace: ',$#', '' | replace: '$#', '' | strip }}{% endcapture %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% assign lowercase_page_title = page_title | downcase %}{% assign lowercase_shop_name = shop.name | downcase %}{% unless lowercase_page_title contains lowercase_shop_name %} &ndash; {{ shop.name }}{% endunless %}{% endcapture %}{% capture smartseo_description %}{{ default_template_description | replace: 'null', '' | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '   ', ' ' | replace: '  ', ' ' | replace: ', , ,', ',' | replace: ',,,', ',' | replace: ', ,', ',' | replace: ',,', ',' | replace: '| | |', '|' | replace: '|||', '|' | replace: '| |', '|' | replace: '||', '|' | replace: ': : :', ':' | replace: ':::', ':' | replace: ': :', ':' | replace: '::', ':' | strip | prepend: '$#' | append: '$#' | replace: '$# ,', '' | replace: '$#,', '' | replace: ', $#', '' | replace: ',$#', '' | replace: '$# |', '' | replace: '$#|', '' | replace: '| $#', '' | replace: '|$#', '' | replace: '$# :', '' | replace: '$#:', '' | replace: ': $#', '' | replace: ':$#', '' | replace: '$#', ''| replace: '\', '\\\\' | strip | strip_html | escape_once }}{% endcapture %}{% capture smartseo_full_description %}{{ default_template_description | replace: 'null', '' | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '   ', ' ' | replace: '  ', ' ' | replace: ', , ,', ',' | replace: ',,,', ',' | replace: ', ,', ',' | replace: ',,', ',' | replace: '| | |', '|' | replace: '|||', '|' | replace: '| |', '|' | replace: '||', '|' | replace: ': : :', ':' | replace: ':::', ':' | replace: ': :', ':' | replace: '::', ':' | strip | prepend: '$#' | append: '$#' | replace: '$# ,', '' | replace: '$#,', '' | replace: ', $#', '' | replace: ',$#', '' | replace: '$# |', '' | replace: '$#|', '' | replace: '| $#', '' | replace: '|$#', '' | replace: '$# :', '' | replace: '$#:', '' | replace: ': $#', '' | replace: ':$#', '' | replace: '$#', ''| replace: '\', '\\\\' | strip | strip_html | escape_once }}{% endcapture %}{% capture smartseo_title %}{{ default_template_title | replace: 'null', '' | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '   ', ' ' | replace: '  ', ' ' | replace: ', , ,', ',' | replace: ',,,', ',' | replace: ', ,', ',' | replace: ',,', ',' | replace: '| | |', '|' | replace: '|||', '|' | replace: '| |', '|' | replace: '||', '|' | replace: ': : :', ':' | replace: ':::', ':' | replace: ': :', ':' | replace: '::', ':' | strip | prepend: '$#' | append: '$#' | replace: '$# ,', '' | replace: '$#,', '' | replace: ', $#', '' | replace: ',$#', '' | replace: '$# |', '' | replace: '$#|', '' | replace: '| $#', '' | replace: '|$#', '' | replace: '$# :', '' | replace: '$#:', '' | replace: ': $#', '' | replace: ':$#', '' | replace: '$#', ''| replace: '\', '\\\\' | strip | strip_html | escape_once }}{% endcapture -%}
+
+{%- assign page_seo_metafield_namespace = 'page_seo' -%}
+{%- assign page_seo_metafield_key = 'seo_tags' -%}
+{%- assign metafield_parts_separator = '=||=' -%}
+{%- assign template_value_parts_separator = ':||:' -%}
+
+{%- assign smartseo_keywords = blank -%}
+{%- assign active_seo_template = blank -%}
+{%- assign active_seo_template_timestamp = 0 -%}
+
+{%- assign page_seo_template_metafield = page.metafields[page_seo_metafield_namespace][page_seo_metafield_key] -%}
+
+{%- if page_seo_template_metafield -%}
+    {%- assign seo_template_metafield_parts = page_seo_template_metafield | split: metafield_parts_separator -%}
+    {%- assign active_seo_template = seo_template_metafield_parts[0] -%}
+    {%- assign active_seo_template_timestamp = seo_template_metafield_parts | last | times: 1 -%}
+{%- endif -%}
+
+{%- if active_seo_template != blank -%}
+
+    {%- assign template_value_parts = active_seo_template | split: template_value_parts_separator -%}
+
+    {%- assign smartseo_title = template_value_parts[0] | replace: 'null', '' | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '   ', ' ' | replace: '  ', ' ' | replace: ', , ,', ',' | replace: ',,,', ',' | replace: ', ,', ',' | replace: ',,', ',' | replace: '| | |', '|' | replace: '|||', '|' | replace: '| |', '|' | replace: '||', '|' | replace: ': : :', ':' | replace: ':::', ':' | replace: ': :', ':' | replace: '::', ':' | strip | prepend: '$#' | append: '$#' | replace: '$# ,', '' | replace: '$#,', '' | replace: ', $#', '' | replace: ',$#', '' | replace: '$# |', '' | replace: '$#|', '' | replace: '| $#', '' | replace: '|$#', '' | replace: '$# :', '' | replace: '$#:', '' | replace: ': $#', '' | replace: ':$#', '' | replace: '$#', ''| replace: '\', '\\\\' | strip | strip_html | escape_once -%}
+    {%- assign smartseo_full_description = template_value_parts[1] | replace: 'null', '' | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '   ', ' ' | replace: '  ', ' ' | replace: ', , ,', ',' | replace: ',,,', ',' | replace: ', ,', ',' | replace: ',,', ',' | replace: '| | |', '|' | replace: '|||', '|' | replace: '| |', '|' | replace: '||', '|' | replace: ': : :', ':' | replace: ':::', ':' | replace: ': :', ':' | replace: '::', ':' | strip | prepend: '$#' | append: '$#' | replace: '$# ,', '' | replace: '$#,', '' | replace: ', $#', '' | replace: ',$#', '' | replace: '$# |', '' | replace: '$#|', '' | replace: '| $#', '' | replace: '|$#', '' | replace: '$# :', '' | replace: '$#:', '' | replace: ': $#', '' | replace: ':$#', '' | replace: '$#', ''| replace: '\', '\\\\' | strip | strip_html | escape_once -%}
+    {%- assign smartseo_description = smartseo_full_description | truncate: 300 -%}
+    {%- if template_value_parts.size == 3 -%}
+        {%- assign keywords_template_value = template_value_parts[2] | replace: 'null', '' | newline_to_br | replace: '<br />', ' ' | strip_newlines | replace: '   ', ' ' | replace: '  ', ' ' | replace: ', , ,', ',' | replace: ',,,', ',' | replace: ', ,', ',' | replace: ',,', ',' | replace: '| | |', '|' | replace: '|||', '|' | replace: '| |', '|' | replace: '||', '|' | replace: ': : :', ':' | replace: ':::', ':' | replace: ': :', ':' | replace: '::', ':' | strip | prepend: '$#' | append: '$#' | replace: '$# ,', '' | replace: '$#,', '' | replace: ', $#', '' | replace: ',$#', '' | replace: '$# |', '' | replace: '$#|', '' | replace: '| $#', '' | replace: '|$#', '' | replace: '$# :', '' | replace: '$#:', '' | replace: ': $#', '' | replace: ':$#', '' | replace: '$#', ''| replace: '\', '\\\\' | strip | strip_html | escape_once -%}
+        {%- if keywords_template_value != '' or keywords_template_value != blank or keywords_template_value != nil -%}
+            {%- assign smartseo_keywords = keywords_template_value -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endif -%}
+
+<title>{{ smartseo_title }}</title>
+<meta name="description" content="{{ smartseo_description }}" />
+<meta name="smartseo-keyword" content="{{ smartseo_keywords }}" />
+<meta name="smartseo-timestamp" content="{{ active_seo_template_timestamp }}" />
+
+{%- assign stop_template_processing = true -%}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  <meta name="version" content="3.0.4">
+  <meta name="email" content="{{ shop.email }}">
+  <meta name="role" content="{{ theme.role }}">
+  
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {% if settings.favicon != blank %}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {% endif %}
+
+  {% capture seo_title %}
+    {{ page_title }}
+    {% if current_tags %}
+      {%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+    {% endif %}
+    {% if current_page != 1 %}
+      &ndash; {{ 'general.meta.page' | t: page: current_page }}
+    {% endif %}
+    {% unless page_title contains shop.name %}
+      &ndash; {{ shop.name }}
+    {% endunless %}
+  {% endcapture %}
+
+  {% include 'social-meta-tags' %}
+ 
+
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'typo-color.scss.css' | asset_url | stylesheet_tag }}
+  {{ 'fancybox.css' | asset_url | stylesheet_tag }}
+    {% include 'google-fonts' %}
+  <script>
+    var theme = {
+      strings: {
+        addToCart: {{ 'products.product.add_to_cart' | t | json }},
+        soldOut: {{ 'products.product.sold_out' | t | json }},
+        unavailable: {{ 'products.product.unavailable' | t | json }},
+        showMore: {{ 'general.filters.show_more' | t | json }},
+        showLess: {{ 'general.filters.show_less' | t | json }},
+        addressError: {{ 'sections.map.address_error' | t | json }},
+        addressNoResults: {{ 'sections.map.address_no_results' | t | json }},
+        addressQueryLimit: {{ 'sections.map.address_query_limit_html' | t | json }},
+        authError: {{ 'sections.map.auth_error_html' | t | json }}
+      },
+      moneyFormat: {{ shop.money_format | json }}
+    }
+
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+  </script>
+    <!--[if (lte IE 9) ]>{{ 'match-media.min.js' | asset_url | script_tag }}<![endif]-->
+
+  {% if template.directory == 'customers' %}
+    <!--[if (gt IE 9)|!(IE)]><!--><script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script><!--<![endif]-->
+    <!--[if lte IE 9]><script src="{{ 'shopify_common.js' | shopify_asset_url }}"></script><![endif]-->
+  {% endif %}
+  <script type="text/javascript">
+   var sv = {{ 'products.product.on_save_like_price' | t | json }};var x = {{ 'products.product.on_save' | t | json  }}; var y = {{ 'general.newsletter_form.confirmation' | t | json }};{% if settings.show_multiple_currencies %}var currency_dropdown = true;{% if settings.select_dropdown == 'auto_currency' %}var auto_curncy = true;{% else %}var auto_curncy = false;{% endif %}{% else %}var currency_dropdown = false;{% endif %}{% if settings.show_saved_amount %}{% if settings.show_discount_amount == 'percent_save' %}var precentprice = true;{% else %} var precentprice = false; {% endif %}{% else %}var precentprice = false;{% endif %}
+   var addToCartBtnLabel_1 = {{ 'products.product.add_to_cart' | t | json }},addedToCartBtnLabe_1 = {{ "products.product.Thanks_you" | t | json }},addingToCartBtnLabel_1 = {{ "products.product.adding" | t | json }},soldOutBtnLabel_1 = {{ "products.product.sold_out" | t | json }};{% if template == 'product' or template == 'index'%}var relatedupsellmodal = true;{% else %}var relatedupsellmodal = false;{% endif %}var added_to_cart = {{ 'cart.general.added_to_cart' | t | json }};var view_cart = {{ "cart.general.view_cart" | t | json }};var or = {{"cart.general.or_as_separator" | t | json }};var continue_shopping = {{ "cart.general.continue_shopping" | t | json }};var items_count_one = {{ 'layout.cart.items_count.one' | t | json }};var items_count_other = {{ 'layout.cart.items_count.other' | t | json }};var read_more = {{ "products.timer.readmore" | t | json}};var read_less = {{ "products.timer.readless" | t | json}};var eblstcky = false;var ebl_pay_but = false;var read_mor = false;var visitorcountr = false;var livestock = false;var progress_bar_random = false;var enable_defaul_variant = true;
+  </script>
+  <!--[if (gt IE 9)|!(IE)]><!--><script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script><!--<![endif]-->
+  <!--[if lte IE 9]><script src="{{ 'lazysizes.min.js' | asset_url }}"></script><![endif]-->
+<!--[if lte IE 9]><!--><script src="{{ 'vendor.js' | asset_url }}"></script><!--><![endif]-->
+  <!--[if lte IE 9]><!--><script src="{{ 'theme.js' | asset_url }}"></script><!--><![endif]-->
+   <!--[if lte IE 9]><!--><script src="{{ 'fancybox.js' | asset_url }}"></script><!--><![endif]-->
+  
+ 
+
+  <!--  bootstrap js & css  -->
+  <script src="{{ 'bootstrap.min.js' | asset_url }}"></script>
+  <script>var mainShopDomain='{{shop.permanent_domain}}';</script>
+  {{ 'shop.js' | asset_url | script_tag }}
+ 
+  {{ 'fontawesome.css' | asset_url | stylesheet_tag }}
+  
+  {{ content_for_header }}
+  <link href="https://fonts.googleapis.com/css?family=Anton|Arimo|Arvo|Baloo+Bhai|Baloo+Bhaina|Bitter|Bree+Serif|Cabin|Catamaran|David+Libre|Dosis|Droid+Sans|Droid+Serif|Ek+Mukta|Fjalla+One|Hind|Inconsolata|Indie+Flower|Lato|Libre+Baskerville|Lobster|Lora|Merriweather|Modak|Montserrat|Muli|Noto+Sans|Noto+Serif|Nunito|Open+Sans|Open+Sans+Condensed:300|Oswald|Oxygen|PT+Sans|PT+Sans+Narrow|PT+Serif|Pavanam|Playfair+Display|Poppins|Raleway|Roboto|Roboto+Condensed|Roboto+Slab|Slabo+27px|Source+Sans+Pro|Teko|Titillium+Web|Ubuntu|Yanone+Kaffeesatz|Yatra+One" rel="stylesheet">
+
+  <style type="text/css"> .product-description + [data-readmore-toggle], .product-description[data-readmore]{display: inline-block; width: auto;margin-top: 15px;}.product-description[data-readmore]{transition: height 100ms;overflow-x: hidden !important;overflow: -webkit-paged-x;}</style>
+  {% if settings.product_review  and settings.review_app == 'ali_review_app' %}	
+  {% include 'alireviews_core' %} 
+  {% endif %}
+  <!-- Google Webmaster Tools Site Verification -->
+<meta name="google-site-verification" content="AmhEpDX4jctTAdBqbxN3lIjI510P_vLmID60JGwKbOs" />
+  {% include 'judgeme_core' %}
+</head>
+
+<body class="template-{{ template | split: '.' | first }}{% if settings.page_style == 'marketplace' and template == 'product'%} amazon_pro{% endif %}{% if template == 'product.amazon' %} amazon_pro{% endif %}">
+<div class="body_wrapper">
+  <input type="hidden" id="product_key" value="{{ settings.product_key }}">
+  <input type="hidden" id="permanent_domain" value="{{ shop.permanent_domain }}">
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+  {% if settings.salepopup_position == 'top'%}
+   {% include 'notification-popup' %}
+  {% endif %}
+  <div id="SearchDrawer" class="search-bar drawer drawer--top">
+    <div class="search-bar__table">
+      <div class="search-bar__table-cell search-bar__form-wrapper">
+        <form class="search search-bar__form" action="/search" method="get" role="search">
+          <button class="search-bar__submit search__submit btn--link" type="submit">
+            {% include 'icon-search' %}
+            <span class="icon__fallback-text">{{ 'general.search.submit' | t }}</span>
+          </button>
+          {% if settings.search_result == 'only_product'%}
+          <input type="hidden" name="type" value="product">
+          {% endif %}
+          <input class="search__input search-bar__input" type="input" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}">
+        </form>
+      </div>
+      <div class="search-bar__table-cell text-right">
+        <button type="button" class="btn--link search-bar__close js-drawer-close">
+          {% include 'icon-close' %}
+          <span class="icon__fallback-text">{{ 'general.search.close' | t }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {% section 'header' %}
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v6.0&appId=2594894014091000&autoLogAppEvents=1"></script>
+  <div class="page-container" id="PageContainer">
+
+    <main class="main-content" id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'footer' %}
+
+  </div>
+   <!-- Start discount popup -->  
+  {% include 'discount_popup' %}    
+  <!-- End discount popup -->
+  {% if settings.salepopup_position == 'bottom'%} 
+   {% include 'notification-popup' %}
+  {% endif %}
+  {{ 'timer_all.scss' | asset_url | stylesheet_tag }}
+  {{ 'timer_new.scss' | asset_url | stylesheet_tag }}
+  
+  {% include 'currencies' %}
+
+  {% include 'ajaxify-cart' %}  
+  {% if settings.show_message_gdpr %}
+  {% section 'fixed-message' %}
+  {% endif %}
+  {% if template == 'product' or template == 'product.amazon' or template == 'product.rv'%}
+ 
+  <script>
+    {% if settings.enable_sticky_add %}
+
+    function stickyheightFunction() {
+      if($(window).width() > 989) {
+        //$(".sticky_product_amazon").css('max-height', $('#shopify-section-footer').offsetTop + "px");
+        var elementHeight = $('.main-content').height();
+        //console.log(elementHeight);
+        if(elementHeight < 1000) { 
+          $(".sticky_product_amazon").css('max-height', elementHeight);
+          $('.main-content').css('margin-bottom', '100px'); 
+        } else {
+          $(".sticky_product_amazon").css('max-height', elementHeight);
+          $('.main-content').css('margin-bottom', '50px');
+        }
+      }
+    }
+    $(document).ready(function () {
+      setTimeout(function(){ 
+        stickyheightFunction();    
+      }, 4000);
+    });
+    $(window).bind('resize', function(e)
+                   {
+      window.resizeEvt;
+      $(window).resize(function()
+                       {
+        clearTimeout(window.resizeEvt);
+        window.resizeEvt = setTimeout(function()
+                                      {
+          stickyheightFunction();
+        }, 250);
+      });
+    });
+
+    {% endif %}
+  </script>
+  {% endif %}
+  </div>
+   <!-- dynamic branded button overlap in mobile fixed -->
+  <style>
+    div#mst-stiky-box.adjustPad{padding-bottom:92px}
+  	@media(min-width:419px){
+    div#mst-stiky-box.adjustPad{padding-bottom:80px}
+    }
+  </style>
+  <script>
+   $(document).scroll(function () {
+      if($('.shopify-payment-button__button--branded').length > 0){
+      $('#mst-stiky-box').addClass('adjustPad');
+       // console.log('branded sticky button');
+      } else {
+      $('#mst-stiky-box').removeClass('adjustPad');
+       // console.log('unbranded sticky button');
+      }
+   });
+  </script>
+ <!-- end dynamic branded button overlap in mobile fixed -->
+{% include 'cjpod' %}
+  {% include 'revy-bundle-script' %}
+</body>
+</html>
+
